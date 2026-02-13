@@ -17,11 +17,10 @@ This document defines old capability names and their canonical replacements for 
 
 | Platform | Old Name | Canonical Name | Status | Notes |
 |---|---|---|---|---|
-| Claude | `code-review_personal` | `code-review-personal` | `Active Alias` | `claude/commands/code-review-personal.md` routes to underscore version for backward compatibility. |
-| Cursor | `explain-feature` | `feature-summary` | `Planned Deprecation` | Both produce branch-level feature summaries; canonical name is shared across all 3 platforms. |
-| Cursor | `review` | `code-review-personal` | `Planned Deprecation` | Both are full code-review flows; canonical name is shared across all 3 platforms. |
-| Cursor | `summarize-for-future-me` | `feature-summary` | `Planned Deprecation` | Keep output concise via prompt style, but use canonical name for discoverability. |
-| Cursor | `lightweight-code-review` | `code-review-personal` | `Planned Deprecation` | For lighter output, invoke canonical name with reduced-depth instructions. |
+| Cursor | `explain-feature` | `feature-summary` | `Active Alias` | Alias delegates to `feature-summary`; use canonical name in new usage. |
+| Cursor | `review` | `code-review-personal` | `Active Alias` | Alias delegates to `code-review-personal`; use canonical name in new usage. |
+| Cursor | `summarize-for-future-me` | `feature-summary` | `Active Alias` | Alias delegates to `feature-summary`; use canonical name in new usage. |
+| Cursor | `lightweight-code-review` | `code-review-personal` | `Active Alias` | Alias delegates to `code-review-personal`; keep lighter format via prompt style. |
 
 ## Migration Rules
 
@@ -32,5 +31,5 @@ This document defines old capability names and their canonical replacements for 
 ## Suggested Validation Command
 
 ```bash
-rg -n "code-review_personal|explain-feature|review|summarize-for-future-me|lightweight-code-review" cursor claude codex
+rg -n "explain-feature|review|summarize-for-future-me|lightweight-code-review" cursor claude codex
 ```

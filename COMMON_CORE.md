@@ -25,12 +25,11 @@ This file defines the shared, canonical capability names that should remain alig
 | `write-tests` | `cursor/skills/write-tests/SKILL.md` | `claude/commands/write-tests.md` | `codex/skills/write-tests/SKILL.md` |
 | `full-feature-workflow` | `cursor/skills/full-feature-workflow/SKILL.md` | `claude/commands/full-feature-workflow.md` | `codex/skills/full-feature-workflow/SKILL.md` |
 | `pr-review-guide` | `cursor/skills/pr-review-guide/SKILL.md` | `claude/commands/pr-review-guide.md` | `codex/skills/pr-review-guide/SKILL.md` |
-| `code-review-personal` | `cursor/skills/code-review-personal/SKILL.md` | `claude/commands/code-review-personal.md` (alias to underscore version) | `codex/skills/code-review-personal/SKILL.md` |
+| `code-review-personal` | `cursor/skills/code-review-personal/SKILL.md` | `claude/commands/code-review-personal.md` | `codex/skills/code-review-personal/SKILL.md` |
 | `review-commits` | `cursor/skills/review-commits/SKILL.md` | `claude/commands/review-commits.md` | `codex/skills/review-commits/SKILL.md` |
 
 ## Notes
 
 - This intentionally creates a common baseline first; platform-specific custom capabilities remain in place.
-- `claude/commands/code-review_personal.md` is preserved for backward compatibility.
 - See `DEPRECATION_MAP.md` for old-name migration and alias status.
 - If you add new shared capabilities, add them to this file only when all three platforms have matching names and similar intent.

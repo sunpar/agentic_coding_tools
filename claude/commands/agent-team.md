@@ -108,7 +108,7 @@ Save the output to: {docs-dir}/T{N}-feature-summary-2.md
 
 ### Step 8: Code Review
 
-Read {git-root}/.claude/commands/code-review_personal.md for the review format.
+Read {git-root}/.claude/commands/code-review-personal.md for the review format.
 
 Perform a code review focused on the task T{N} files, using {docs-dir}/T{N}-feature-summary-2.md as context.
 
