@@ -1,0 +1,101 @@
+---
+description: Typescript guidelines
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# WHEN TO APPLY
+
+- File is a `.ts` or `.tsx` file
+- User asks for TypeScript types, interfaces, generics, or refactors that affect typing.
+
+# DIRECTIVES
+
+## General TypeScript
+
+1. Assume **TypeScript strict mode** is enabled. Do not weaken compiler options.
+2. Avoid `any`. Prefer:
+   - Inferred types where they are obvious.
+   - `unknown` for externally sourced data that must be validated.
+   - Explicit interfaces / type aliases for complex shapes.
+3. Prefer **type aliases** for unions and **interfaces** for object contracts that may be extended.
+4. Use discriminated unions for multi-state values such as `"idle" | "loading" | "success" | "error"` rather than loosely related boolean flags.
+
+## Functions and APIs
+
+5. Annotate public function signatures and exported values. Allow local implementation details to rely on inference.
+6. Prefer returning typed objects over positional tuples for readability.
+7. Make nullability explicit. Use `T | null` or `T | undefined` instead of relying on implicit absence.
+
+## Working with React
+
+8. Use `React.FC` only if the project already uses it consistently; otherwise type props explicitly via interfaces and normal function components.
+9. Type React component props using `interface ComponentProps { ... }` or `type ComponentProps = { ... }`, then:
+
+    ```ts
+    type UserCardProps = {
+        user: UserModel
+        onSelect?: (userId: string) => void
+    }
+
+    function UserCard({ user, onSelect }: UserCardProps) {
+        // ...
+    }
+    ```
+
+10. For event handlers, use the correct React event types (`MouseEvent`, `ChangeEvent`, etc.), imported from `React` or `react`.
+
+## React Query typing
+
+11. When using `useQuery`, always type the data and error generics:
+
+```ts
+const { data, error } = useQuery<User[]>(['users'], fetchUsers)
+```
+
+12. For `useMutation`, type the mutation function, result, variables, and error where useful to catch mistakes early.
+
+## MobX / MobX State Tree typing
+
+13. Prefer explicit model definitions with MST:
+
+```ts
+const UserModel = types
+  .model('User', {
+    id: types.identifier,
+    name: types.string,
+  })
+```
+
+14. Use `Instance<typeof UserModel>` or dedicated exported types for MST instances used in components.
+15. Avoid `any` within MST actions; type arguments and return values.
+
+## Library-specific practices
+
+16. When importing from `lodash`, prefer path imports such as:
+
+```ts
+import debounce from 'lodash/debounce'
+```
+
+rather than importing the entire library.
+
+17. Type chart options and data structures for ECharts and D3 when it improves clarity, but allow some `Record<string, unknown>` style types at integration boundaries when exact typing would be disproportionately complex.
+
+## Error handling and async
+
+18. For async functions, use `Promise<ResultType>` and wrap logic in `try/catch` at boundaries where errors can be handled.
+19. Avoid swallowing errors. Either handle them or rethrow with context.
+
+# WORKFLOW
+
+1. Start from existing types and models; extend them rather than creating parallel, slightly different shapes.
+2. When refactoring, update types first so that the compiler guides the migration.
+3. Use the TypeScript compiler and ESLint to catch style and safety issues; do not re-state purely stylistic rules here.
+
+# OUTPUT REQUIREMENTS
+
+* Prefer `.tsx` for files containing JSX.
+* Ensure generated code type-checks under `tsc -b` and compiles in the Vite TypeScript configuration.
+
+````

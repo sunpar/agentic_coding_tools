@@ -1,0 +1,116 @@
+---
+description: Prefer Pydantic for data classes and configuration objects
+globs: **/*.py
+alwaysApply: false
+---
+
+# Prefer Pydantic for Class Creation
+
+When creating classes that handle data, configuration, or need validation, prefer using Pydantic BaseModel over regular Python classes.
+
+## When to Use Pydantic
+
+✅ **Use Pydantic for:**
+- Configuration classes with default values and validation
+- Data transfer objects (DTOs) between functions/modules
+- API request/response models
+- Classes that need serialization/deserialization
+- Classes with complex validation logic
+- Result objects that need structured error handling
+
+## Benefits of Pydantic
+
+1. **Automatic Type Validation** - Runtime type checking and conversion
+2. **Data Validation** - Custom validators for business logic
+3. **Clear Error Messages** - Detailed validation error reporting
+4. **Serialization Support** - Built-in JSON/dict conversion
+5. **IDE Support** - Better autocomplete and type hints
+6. **Documentation** - Auto-generated schema and field descriptions
+
+## Examples
+
+### ✅ Good: Pydantic Configuration Class
+```python
+from pydantic import BaseModel, Field, validator
+
+class DatabaseConfig(BaseModel):
+    host: str = Field(..., description="Database hostname")
+    port: int = Field(default=5432, ge=1, le=65535)
+    username: str = Field(..., min_length=1)
+    password: str = Field(..., min_length=8)
+    
+    @validator('host')
+    def validate_host(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Host cannot be empty')
+        return v.strip()
+```
+
+### ❌ Avoid: Plain Class for Data
+```python
+class DatabaseConfig:
+    def __init__(self, host, port=5432, username=None, password=None):
+        self.host = host
+        self.port = port
+        self.username = username
+        self.password = password
+        # No validation, no type safety, no documentation
+```
+
+### ✅ Good: Request/Response Models
+```python
+from pydantic import BaseModel, Field, validator
+from typing import List, Optional, Union
+
+class CreateViewRequest(BaseModel):
+    source_table: str = Field(..., regex=r'^dt_\w+$')
+    target_schema: str
+    use_latest_ref: bool = False
+    
+class CreateViewResponse(BaseModel):
+    success: bool
+    view_name: Optional[str] = None
+    error_message: Optional[str] = None
+    sql_executed: Optional[str] = None
+```
+
+### ✅ Good: Result Objects
+```python
+from pydantic import BaseModel, Field, validator
+from typing import List, Optional, Union
+
+class ProcessingResult(BaseModel):
+    items_processed: int = Field(ge=0)
+    items_failed: int = Field(ge=0)
+    errors: List[str] = Field(default_factory=list)
+    duration_seconds: float = Field(ge=0)
+    
+    @property
+    def success_rate(self) -> float:
+        total = self.items_processed + self.items_failed
+        return self.items_processed / total if total > 0 else 0.0
+```
+
+## When NOT to Use Pydantic
+
+❌ **Avoid Pydantic for:**
+- Simple utility classes without data validation needs
+- Classes that primarily contain methods/behavior (use regular classes)
+- Performance-critical code where validation overhead matters
+- Classes that need to inherit from specific non-Pydantic base classes
+
+## Import Pattern
+
+```python
+from pydantic import BaseModel, Field, validator
+from typing import List, Optional, Union
+```
+
+## Validation Best Practices
+
+1. **Use Field() for documentation and constraints**
+2. **Add custom validators for business logic**
+3. **Provide meaningful error messages**
+4. **Use Optional[] for nullable fields**
+5. **Set sensible defaults with Field(default=...)**
+6. **Use validator decorators for complex validation**

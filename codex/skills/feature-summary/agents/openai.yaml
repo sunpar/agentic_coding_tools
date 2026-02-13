@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Summary"
+  short_description: "Summarize branch feature changes for PR context"
+  default_prompt: "Summarize branch work into a structured feature_summary.md covering behavior, security, tests, and open questions."

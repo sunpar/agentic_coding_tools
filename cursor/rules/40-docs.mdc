@@ -1,0 +1,13 @@
+---
+description: Docs rules for keeping architecture and dev instructions accurate
+globs:
+  - docs/**/*.md
+  - README.md
+  - AGENTS.md
+alwaysApply: false
+---
+
+# Docs standards
+- Keep “how to run” commands copy/pasteable and correct.
+- When endpoints/data models change, update docs/ARCHITECTURE.md and any API docs references.
+- Prefer mermaid diagrams for architecture updates when helpful.

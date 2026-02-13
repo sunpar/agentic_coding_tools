@@ -1,0 +1,18 @@
+---
+description: Pipeline/ETL rules for transaction normalization and derived metrics
+globs:
+  - backend/app/pipeline/**/*.py
+alwaysApply: false
+---
+
+# Pipeline principles
+- Idempotent: reruns must not duplicate rows.
+- Deterministic: same input -> same output.
+- Incremental: prefer processing "new uploads" rather than full recompute (unless explicitly requested).
+
+# Testing strategy
+- Write unit tests for parsing and normalization edge cases.
+- Keep fixtures small (few rows) and anonymized.
+
+# Verification
+- `cd backend && pytest -q`

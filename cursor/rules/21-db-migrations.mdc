@@ -1,0 +1,19 @@
+---
+description: Apply when changing the database schema or writing migrations
+globs:
+  - backend/alembic/**/*.py
+  - backend/app/models/**/*.py
+alwaysApply: false
+---
+
+# Alembic workflow (do not skip)
+When schema changes are needed:
+1) Update SQLAlchemy models.
+2) Generate migration (or write it manually if autogenerate is unsafe).
+3) Ensure upgrade AND downgrade work.
+4) Apply locally: `cd backend && alembic upgrade head`
+5) If the migration changes derived/analytics assumptions, update docs and pipeline code.
+
+# Migration hygiene
+- Never edit a migration that has already been merged (create a new one).
+- Use reversible operations where possible.

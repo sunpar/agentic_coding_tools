@@ -1,0 +1,4 @@
+interface:
+  display_name: "Update Docs"
+  short_description: "Update docs to match recent code changes"
+  default_prompt: "Inspect recent changes and update only relevant documentation with minimal accurate edits."

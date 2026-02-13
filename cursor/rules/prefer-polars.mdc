@@ -1,0 +1,200 @@
+---
+description: Prefer Polars over Pandas for data manipulation and analysis
+globs: **/*.py
+alwaysApply: false
+---
+
+# Prefer Polars over Pandas
+
+When working with data manipulation and analysis, prefer using Polars over Pandas for better performance, memory efficiency, and modern syntax.
+
+## When to Use Polars
+
+✅ **Use Polars for:**
+- New data processing pipelines
+- Performance-critical data operations
+- Large dataset processing (>1GB)
+- Complex data transformations and aggregations
+- API data processing and ETL workflows
+- Analytics and reporting systems
+
+## Benefits of Polars
+
+1. **Performance** - 10-100x faster than Pandas in many operations
+2. **Memory Efficiency** - Lower memory usage and better memory management
+3. **Lazy Evaluation** - Optimized query planning and execution
+4. **Parallel Processing** - Built-in multi-threading without GIL limitations
+5. **Type Safety** - Strict typing and better error messages
+6. **Modern API** - Clean, expressive syntax inspired by Rust
+7. **Arrow Integration** - Native Apache Arrow support for interoperability
+
+## Examples
+
+### ✅ Good: Polars DataFrame Operations
+```python
+import polars as pl
+
+# Reading data
+df = pl.read_csv("data.csv")
+df = pl.read_parquet("data.parquet")
+
+# Chained operations with lazy evaluation
+result = (
+    pl.scan_csv("large_data.csv")
+    .filter(pl.col("value") > 100)
+    .group_by("category")
+    .agg([
+        pl.col("amount").sum().alias("total_amount"),
+        pl.col("count").mean().alias("avg_count")
+    ])
+    .sort("total_amount", descending=True)
+    .collect()
+)
+
+# Window functions
+df = df.with_columns([
+    pl.col("price").mean().over("category").alias("category_avg_price"),
+    pl.col("sales").rank().over("region").alias("sales_rank")
+])
+```
+
+### ❌ Avoid: Pandas for New Code
+```python
+import pandas as pd
+
+# Less efficient operations
+df = pd.read_csv("data.csv")
+filtered = df[df['value'] > 100]
+grouped = filtered.groupby('category').agg({
+    'amount': 'sum',
+    'count': 'mean'
+}).reset_index()
+result = grouped.sort_values('amount', ascending=False)
+
+# Slower window functions
+df['category_avg_price'] = df.groupby('category')['price'].transform('mean')
+df['sales_rank'] = df.groupby('region')['sales'].rank()
+```
+
+### ✅ Good: Polars for Database-like Operations
+```python
+# Complex joins and aggregations
+result = (
+    transactions
+    .join(customers, on="customer_id", how="left")
+    .join(products, on="product_id", how="left")
+    .filter(
+        (pl.col("transaction_date") >= pl.date(2023, 1, 1)) &
+        (pl.col("amount") > 0)
+    )
+    .group_by(["customer_segment", "product_category"])
+    .agg([
+        pl.col("amount").sum().alias("total_revenue"),
+        pl.col("transaction_id").count().alias("transaction_count"),
+        pl.col("customer_id").n_unique().alias("unique_customers")
+    ])
+)
+```
+
+### ✅ Good: Polars Integration with Databricks
+```python
+def fetch_all_polars(cursor, target: Target = Target.POLARS) -> pl.DataFrame:
+    """Fetch results as Polars DataFrame for better performance."""
+    if target == Target.POLARS:
+        arrow_table = cursor.fetchall_arrow()
+        return pl.from_arrow(arrow_table)
+    elif target == Target.LAZYFRAME:
+        arrow_table = cursor.fetchall_arrow()
+        return pl.from_arrow(arrow_table).lazy()
+    # ... other targets
+```
+
+## When to Keep Pandas
+
+❌ **Keep Pandas only for:**
+- Legacy code that's working well and doesn't need optimization
+- Libraries that only support Pandas (matplotlib, seaborn integration)
+- Small datasets where performance doesn't matter
+- Quick prototyping with existing Pandas knowledge
+- When team lacks Polars expertise and timeline is tight
+
+## Migration Patterns
+
+### Reading Data
+```python
+# Pandas → Polars
+df = pd.read_csv("file.csv")        # ❌
+df = pl.read_csv("file.csv")        # ✅
+
+df = pd.read_parquet("file.parquet") # ❌
+df = pl.read_parquet("file.parquet") # ✅
+```
+
+### Basic Operations
+```python
+# Filtering
+df[df['column'] > 5]                # ❌ Pandas
+df.filter(pl.col("column") > 5)     # ✅ Polars
+
+# Selecting columns
+df[['col1', 'col2']]                # ❌ Pandas
+df.select(['col1', 'col2'])         # ✅ Polars
+
+# Adding columns
+df['new_col'] = df['old_col'] * 2   # ❌ Pandas
+df.with_columns(                    # ✅ Polars
+    (pl.col("old_col") * 2).alias("new_col")
+)
+```
+
+### Aggregations
+```python
+# Group by operations
+df.groupby('category')['value'].sum()  # ❌ Pandas
+df.group_by('category').agg(           # ✅ Polars
+    pl.col('value').sum()
+)
+```
+
+## Import Pattern
+
+```python
+import polars as pl
+from polars import col, when, lit  # Common expressions
+
+# For lazy evaluation (recommended for large datasets)
+import polars.selectors as cs
+```
+
+## Best Practices
+
+1. **Use Lazy Evaluation** - `scan_csv()` instead of `read_csv()` for large files
+2. **Chain Operations** - Use method chaining for readable pipelines
+3. **Leverage Expressions** - Use `pl.col()`, `pl.when()`, `pl.lit()` for operations
+4. **Optimize Data Types** - Let Polars infer types or specify explicitly
+5. **Use Selectors** - Use `polars.selectors` for column operations
+6. **Profile Performance** - Use `explain()` to understand query plans
+
+## Performance Tips
+
+```python
+# Use lazy evaluation for large datasets
+lazy_df = pl.scan_parquet("large_file.parquet")
+result = (
+    lazy_df
+    .filter(pl.col("date") >= "2023-01-01")
+    .group_by("category")
+    .agg(pl.col("value").sum())
+    .collect()  # Only execute when needed
+)
+
+# Use streaming for very large datasets
+result = (
+    pl.scan_parquet("huge_file.parquet")
+    .group_by("key")
+    .agg(pl.col("value").sum())
+    .collect(streaming=True)
+)
+```
+
+This approach provides significantly better performance and more maintainable data processing code.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Review Guide"
+  short_description: "Generate a PR review guide from feature docs"
+  default_prompt: "Read feature docs and git change scope, then produce a comprehensive PR review guide document."

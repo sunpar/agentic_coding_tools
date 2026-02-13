@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Development"
+  short_description: "Guide end-to-end feature implementation workflow"
+  default_prompt: "Run a phased feature-development workflow: discovery, exploration, clarifications, design, implementation, review, and summary."

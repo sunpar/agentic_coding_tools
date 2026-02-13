@@ -1,0 +1,81 @@
+---
+description: React rendering and bundle performance rules
+globs: **/*.tsx,**/*.ts
+alwaysApply: false
+---
+
+# WHEN TO APPLY
+
+- User mentions performance, responsiveness, or large data.
+- Component re-renders are slow or frequent.
+- File imports `React.memo`, `useMemo`, `useCallback`, `lazy`, ECharts, D3, or Finos Perspective.
+- Code touches large lists, heavy charts, or big data tables.
+
+# DIRECTIVES
+
+## General approach
+
+1. Measure before optimizing. Prefer using React DevTools Profiler or simple timing logs to identify bottlenecks.
+2. Address performance primarily through **architecture**:
+   - Reduce unnecessary renders.
+   - Split heavy components.
+   - Avoid repeated expensive computations in render.
+
+## Rendering optimization
+
+3. Use `React.memo` only for components that:
+   - Render frequently.
+   - Receive props that often remain unchanged.
+4. Use `useCallback` and `useMemo` to stabilize function and object references when:
+   - They are passed deep into component trees.
+   - They are used as dependencies of memoized components or hooks.
+5. Avoid wrapping every component and function in memoization by default. Only memoize after identifying a real benefit.
+
+## Lists and grids
+
+6. For long lists or tables:
+   - Consider virtualization if the visible row count is large (for example, > 1000 items).
+   - For Finos Perspective, prefer its built-in performance features and configuration options instead of manual DOM optimizations.
+
+## Charts and visualization
+
+7. For ECharts:
+   - Avoid recreating large `option` objects on every render; memoize them with `useMemo` when they depend on expensive calculations.
+   - Avoid unnecessary re-renders of chart components by keeping non-chart state out of chart containers where possible.
+8. For D3:
+   - Do expensive data transforms once (for example in `useMemo`) and reuse results.
+   - Prefer declarative React-D3 integration where possible, but accept that some imperative code may be justified for performance.
+
+## Bundle size and code splitting
+
+9. Use `React.lazy` and `<Suspense>` for large, rarely-used components and route-level chunks:
+
+   ```tsx
+   const HeavyPage = React.lazy(() => import('./HeavyPage'))
+````
+
+10. For routing, consider code-splitting per route or per feature when adding new large screens.
+11. When adding new dependencies, prefer small, focused libraries instead of large, overlapping ones.
+
+## Network and server state performance
+
+12. Use React Query features instead of manual polling or refetching:
+
+    * Adjust `staleTime`, `cacheTime`, and refetch options based on feature needs.
+    * Use background refetching rather than always blocking the UI.
+13. Avoid duplicating server data in both React Query cache and separate global stores without a specific reason. When integrating with MST, consider referencing MST instances from React Query or vice versa instead of having completely independent copies.
+
+# CHECKLIST
+
+When asked to improve performance:
+
+* Identify which component or feature is actually slow.
+* Check for:
+
+  * Unnecessary re-renders due to unstable props.
+  * Heavy computations in render that should be moved into `useMemo`.
+  * Large components that could be split or lazily loaded.
+  * Charts or grids that rebuild on every tiny state change.
+* Propose concrete changes and show before/after patterns in code.
+
+```

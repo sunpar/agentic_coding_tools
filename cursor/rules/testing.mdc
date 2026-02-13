@@ -1,0 +1,65 @@
+---
+description: Test writing principles for high-signal, maintainable tests
+globs: ["**/*.test.*", "**/*.spec.*", "**/test_*.py", "**/tests/**"]
+---
+
+# Test Writing Guidelines
+
+These principles apply when writing or reviewing tests in this codebase.
+
+## Pre-Writing Analysis
+
+Before writing any test, answer these questions:
+
+1. **What is the core logic/algorithm?**
+   Identify the actual computation, transformation, or decision-making—not the I/O or framework glue.
+
+2. **What are the inputs and outputs?**
+   Map the full input space:
+   - Empty/null/undefined inputs
+   - Boundary values (0, 1, -1, MAX_INT, empty string, single character)
+   - Invalid or malformed inputs
+   - Inputs at edges of valid ranges
+   - Unusual but valid combinations
+
+3. **What invariants should always hold?**
+   Properties that must be true regardless of input.
+
+4. **What could go wrong?**
+   Think adversarially—how could a user, bad data, or race condition break this?
+
+## Core Rules
+
+### Test behavior, not implementation
+If you refactored the internals but kept the same contract, tests should still pass.
+
+### Minimize mocking
+Only mock true external dependencies (databases, APIs, filesystem). Never mock the code under test or its core collaborators. Extensive mocking suggests testing at the wrong abstraction level.
+
+### No tautological tests
+If a test passes by definition (e.g., "mock returns X, assert result is X" with no logic in between), delete it. Every test must be capable of failing if the code has a bug.
+
+### Test actual logic paths
+Trace through conditionals, loops, and error handling. Each branch should have a test with realistic data.
+
+### Use concrete, realistic test data
+Avoid generic placeholders. Use data that exposes edge cases and makes failures obvious.
+
+### Descriptive test names
+Name tests by their hypothesis: `rejects_negative_quantities` not `test_validation_3`.
+
+## Coverage Requirements
+
+Every test suite should cover:
+- **Happy path**: Normal, expected usage
+- **Edge cases**: Boundary conditions and unusual inputs
+- **Error conditions**: Invalid inputs, failures, exceptions
+- **Boundary values**: Limits, zeros, empty collections
+
+## Verification Checklist
+
+Before finalizing:
+- [ ] Could each test fail if there were a bug in the corresponding logic?
+- [ ] Are you testing actual decisions, or just wiring?
+- [ ] Have you covered: happy path, edge cases, error conditions, boundary values?
+- [ ] If you deleted all mocks, what would remain? That's what you're actually testing.

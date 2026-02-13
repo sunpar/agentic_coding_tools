@@ -1,0 +1,4 @@
+interface:
+  display_name: "Full Feature Workflow"
+  short_description: "Run feature-dev, tests, summaries, refactor, and review in order"
+  default_prompt: "Execute the full feature workflow from implementation through tests, summaries, refactor pass, and personal review artifacts."

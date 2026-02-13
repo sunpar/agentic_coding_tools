@@ -1,0 +1,160 @@
+---
+description: Ant Design v5 usage guide - imports, theming, responsive grid, icons, layout, and performance patterns for React projects.
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# WHEN TO APPLY
+
+Apply these rules to React files that either import `"antd"` or `"@ant-design/icons"`, or contain JSX that uses Ant Design components (for example `<Button />`, `<Form.Item />`, `<Table />`).
+
+---
+
+## IMPORTS, ICONS, AND BUNDLE SIZE
+
+1. Import only the components and hooks you use, rather than the whole library.  
+   ```ts
+   import { Button, Space } from 'antd'
+   import { SmileOutlined } from '@ant-design/icons'
+````
+
+2. Import icons directly from `@ant-design/icons` as named imports. Treat each icon as its own ESM module so it can be tree shaken.
+
+   ```ts
+   import { SearchOutlined } from '@ant-design/icons'
+   ```
+3. For custom SVGs, wrap them with Ant Design's `Icon` component.
+
+   ```tsx
+   import Icon from '@ant-design/icons'
+
+   const MyIcon = (props: React.ComponentProps<typeof Icon>) => (
+     <Icon component={MySvg} {...props} />
+   )
+   ```
+4. For rarely visited routes that use heavy components (for example `Table`, `DatePicker`, charting), use `React.lazy` or similar mechanisms to split bundles and load them on demand.
+
+---
+
+## LAYOUT, GRID, AND FLEX
+
+1. Use Ant Design layout primitives instead of raw `div` containers for spacing and layout whenever possible:
+
+   * `Row` / `Col` for grid layouts
+   * `Flex` or `Space` for horizontal or vertical alignment and spacing
+   * `Layout`, `Layout.Header`, `Layout.Content`, `Layout.Sider`, `Layout.Footer` for page chrome
+     Prefer these over `<div>` wrappers that only exist for alignment, spacing, or grid behavior.
+2. Use the 24 column responsive grid system and define spans and offsets per breakpoint (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`).
+
+   ```tsx
+   <Row gutter={16}>
+     <Col xs={24} md={12}>
+       <Card>Left</Card>
+     </Col>
+     <Col xs={24} md={12}>
+       <Card>Right</Card>
+     </Col>
+   </Row>
+   ```
+3. When you need breakpoint info in code (for example to conditionally render components or adjust props), use `Grid.useBreakpoint()` from Ant Design.
+
+   ```tsx
+   const screens = Grid.useBreakpoint()
+   const isMobile = !screens.md
+   ```
+
+---
+
+## FORMS AND VALIDATION
+
+1. Prefer the hook API for forms when you need imperative actions such as reset, validation, or scrolling.
+
+   ```tsx
+   const [form] = Form.useForm()
+   ```
+2. Run validation in `onFinish` and handle server side validation by setting field errors with `form.setFields`.
+
+   ```tsx
+   const onFinish = async (values: FormValues) => {
+     const result = await api.submit(values)
+     if (!result.ok && result.fieldErrors) {
+       form.setFields(
+         result.fieldErrors.map(([name, message]) => ({
+           name,
+           errors: [message],
+         }))
+       )
+     }
+   }
+   ```
+
+---
+
+## PERFORMANCE
+
+1. For large data sets in `Table`, use:
+
+   * `scroll={{ y: ... }}` to enable virtual or windowed scrolling
+   * `rowKey` set to a stable unique key
+2. Lazy load heavy modal style UI (for example `Modal`, `Drawer`) and render them only when needed. It is acceptable to return `null` for these components until they are actually opened, to avoid unnecessary work on the initial render.
+3. Prefer memoization (`React.memo`, `useMemo`, `useCallback`) and Ant Design's built in performance props where appropriate when rendering large lists or complex trees of components.
+
+---
+
+## DO NOT GENERATE
+
+1. Global CSS overrides that target `.ant-*` selectors. Use Ant Design tokens and theme configuration instead of overriding internal class names.
+2. Wildcard imports such as:
+
+   ```ts
+   import * as antd from 'antd'
+   ```
+3. Side effect css imports for v5:
+
+   ```ts
+   import 'antd/dist/antd.css'
+   ```
+
+   Ant Design v5 uses CSS in JS. Importing the legacy stylesheet increases bundle size and breaks theming.
+4. Icons imported via `require()`, sprite sheets, or URL based icon bundles. Use `@ant-design/icons` or Ant Design's `Icon` wrapper instead.
+
+---
+
+## EXAMPLES
+
+### Bundle friendly imports
+
+```tsx
+import { DatePicker } from 'antd'
+import { CalendarOutlined } from '@ant-design/icons'
+```
+
+Avoid importing the whole library or legacy styles:
+
+```tsx
+// Not allowed
+import * as antd from 'antd'
+import 'antd/dist/antd.css'
+```
+
+### Responsive grid with layout components instead of divs
+
+```tsx
+import { Row, Col, Card, Grid } from 'antd'
+
+const Page: React.FC = () => {
+  const screens = Grid.useBreakpoint()
+  const isMobile = !screens.md
+
+  return (
+    <Row gutter={16}>
+      <Col xs={24} md={16}>
+        <Card title="Main content">...</Card>
+      </Col>
+      <Col xs={24} md={8}>
+        <Card title={isMobile ? 'Details' : 'Sidebar'}>...</Card>
+      </Col>
+    </Row>
+  )
+}
+```

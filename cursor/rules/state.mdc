@@ -1,0 +1,26 @@
+---
+description: State‑management rules (TanStack React Query v5, MobX 6/MST, RxJS 7)
+globs: **/*.tsx,**/*.ts
+alwaysApply: false
+---
+
+# WHEN TO APPLY
+- File imports `@tanstack/react-query`, `mobx`, `mobx-state-tree`, or `rxjs`.
+
+# REACT QUERY v5
+1. Co‑locate queries in custom hooks under `src/hooks/`.
+2. Provide a **typed query key** (tuple) and result type.
+3. Use `select` for shape‑mapping, `placeholderData` for instant paint.
+4. Prefer optimistic updates with `useMutation` + `onMutate/onError`.
+5. Set `staleTime` ≥ 5 s for polling APIs to reduce re‑fetch.  
+   (Breaking‑change details in v5 guide)  
+6. Hydrate server data with `<QueryClientProvider>` + `dehydrate()`.
+
+# MOBX / MST
+1. Enable strict mode:  
+   ```ts
+   import { configure } from 'mobx'
+   configure({ enforceActions: 'always' }) // mobx 6
+2. Keep actions synchronous; side‑effects belong in flow.
+3. Use types.model + types.optional to avoid any.
+4. Expose stores via React Context; consume with useStore().

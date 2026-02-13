@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refactor Changes"
+  short_description: "Refactor current branch changes for clarity and maintainability"
+  default_prompt: "Review git changes and apply behavior-preserving refactors for readability, structure, and conciseness."

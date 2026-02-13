@@ -1,0 +1,20 @@
+---
+description: Core repo context + universal guardrails for the personal finance app
+alwaysApply: true
+---
+
+# Project context (read this first)
+This repo is a monorepo:
+- `frontend/`: Vite + React + TypeScript, Ant Design, React Router, MobX State Tree, TanStack Query
+- `backend/`: FastAPI + SQLAlchemy + Alembic + pipeline code
+- Local infra: Postgres + MinIO via docker compose
+
+# Non-negotiables
+- Small diffs; avoid unrelated refactors.
+- Don’t invent endpoints/schemas—inspect the repo and reuse existing patterns.
+- Financial data is sensitive: do not log raw CSV rows or expose secrets.
+
+# Verification (run after changes)
+- Frontend: `cd frontend && npm run lint && npm run typecheck && npm run build`
+- Backend: `cd backend && ruff check . && ruff format --check . && pytest -q`
+- If you changed DB schema: `cd backend && alembic upgrade head`

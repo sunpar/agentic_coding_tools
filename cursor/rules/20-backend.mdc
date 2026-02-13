@@ -1,0 +1,25 @@
+---
+description: Backend rules for FastAPI, SQLAlchemy, Alembic, and MinIO S3 storage
+globs:
+  - backend/**/*.py
+alwaysApply: false
+---
+
+# Backend architecture rules
+- Routes should be thin: validate input, call a service, return schema.
+- Business logic belongs in `app/services/*` (and pipeline logic in `app/pipeline/*`).
+- DB access uses SQLAlchemy 2.x style; keep transactions explicit where needed.
+- If changing DB schema: create an Alembic migration (never “just change models”).
+
+# API design rules
+- Keep `/api/v1` stable. Prefer adding fields over breaking changes.
+- Use Pydantic schemas for request/response; keep response models explicit.
+
+# Storage rules
+- File uploads go to MinIO via S3 client; store only the storage key + metadata in Postgres.
+- Do not store raw CSV content in logs.
+
+# Verification
+Run:
+- `cd backend && ruff check . && ruff format --check .`
+- `cd backend && pytest -q`

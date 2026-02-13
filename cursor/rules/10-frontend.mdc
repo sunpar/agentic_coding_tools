@@ -1,0 +1,25 @@
+---
+description: Frontend rules for Vite React TS with Ant Design, React Router, MST, and TanStack Query
+globs:
+  - frontend/src/**/*.ts
+  - frontend/src/**/*.tsx
+alwaysApply: false
+---
+
+# Frontend architecture rules
+- UI components: use Ant Design first; avoid adding a second component library.
+- Routing: React Router; keep pages in `src/pages/*` and route config in `src/app/router.tsx`.
+- Server state: TanStack Query owns server caching, retries, loading states.
+- Client state: MobX State Tree for app/UI state only (e.g., layout, preferences). Do NOT duplicate server state into MST.
+
+# TypeScript standards
+- No `any` unless absolutely necessary (add a comment explaining why).
+- Prefer small typed modules: `src/api/*` for HTTP, `src/components/*` for reusable UI, `src/pages/*` for routes.
+- Keep API payloads typed (prefer generated OpenAPI types if available).
+
+# UI/UX rules
+- Prefer AntD `Form` + `Form.Item` for forms and validation.
+- Dates: be consistent. Prefer ISO strings over locale strings in API boundaries.
+
+# Verification
+Run: `cd frontend && npm run lint && npm run typecheck && npm run build`

@@ -1,0 +1,4 @@
+interface:
+  display_name: "De-Slop Diff"
+  short_description: "Remove AI-style code slop from branch diffs"
+  default_prompt: "Audit git diff main...HEAD and remove AI-generated code slop with minimal targeted edits."

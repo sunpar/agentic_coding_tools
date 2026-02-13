@@ -1,0 +1,23 @@
+---
+description: Tailwind 3 + Ant Design 5 styling conventions
+globs: **/*.tsx,**/*.ts
+alwaysApply: false
+---
+
+# WHEN TO APPLY
+- JSX has `className` OR imports AntD components.
+
+# DIRECTIVES
+1. Use **Tailwind utilities**; compose with `clsx` / `cn()`.
+2. Prefix custom classes with `tw-` to avoid AntD collisions.
+3. Import AntD components on demand:  
+   `import { Button } from 'antd'` (babel‑plugin‑import).
+4. Theme via AntD **token system**; avoid overriding CSS directly.
+5. Write **no global CSS** except for `index.css` resets.
+
+# EXAMPLE
+```tsx
+<button className={cn('tw-btn-primary', 'px-4 py-2')}>
+  Save
+</button>
+```

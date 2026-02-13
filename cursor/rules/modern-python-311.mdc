@@ -1,0 +1,218 @@
+---
+description: Modern Python 3.11 features and type hints
+globs: **/*.py
+alwaysApply: false
+---
+# Modern Python 3.11 Features and Type Hints
+
+When working with Python 3.11.11, always use modern features and built-in types for better performance and readability.
+
+## Type Hints - Use Built-in Types
+
+✅ **Use built-in generic types** (Python 3.9+):
+```python
+# Good - built-in types
+def process_data(items: list[str]) -> dict[str, int]:
+    return {item: len(item) for item in items}
+
+def get_mapping() -> dict[str, list[int]]:
+    return {"numbers": [1, 2, 3]}
+
+# Optional types
+def find_user(user_id: str) -> User | None:
+    return users.get(user_id)
+```
+
+❌ **Avoid legacy typing imports** (Python 3.8 and earlier):
+```python
+# Bad - legacy typing imports
+from typing import Dict, List, Optional
+
+def process_data(items: List[str]) -> Dict[str, int]:
+    return {item: len(item) for item in items}
+
+def find_user(user_id: str) -> Optional[User]:
+    return users.get(user_id)
+```
+
+## Modern Type Hint Patterns
+
+### Union Types (Python 3.10+)
+```python
+# Good - use | for union types
+def process_value(value: str | int | float) -> str:
+    return str(value)
+
+# Good - for optional types
+def get_config(key: str) -> str | None:
+    return config.get(key)
+```
+
+### Generic Types
+```python
+# Good - built-in generics
+from collections.abc import Callable, Iterable, Mapping
+
+def apply_to_all(func: Callable[[int], str], items: list[int]) -> list[str]:
+    return [func(item) for item in items]
+
+def process_mapping(data: Mapping[str, list[int]]) -> dict[str, int]:
+    return {k: sum(v) for k, v in data.items()}
+```
+
+### Type Aliases (Python 3.10+)
+```python
+# Good - explicit type aliases
+UserId = str
+UserData = dict[str, str | int]
+ProcessingResult = tuple[bool, str | None]
+
+def create_user(user_id: UserId, data: UserData) -> ProcessingResult:
+    # implementation
+    return True, None
+```
+
+## Modern Python Features to Use
+
+### Pattern Matching (Python 3.10+)
+```python
+# Good - use match/case for complex conditionals
+def handle_response(response: dict[str, any]) -> str:
+    match response:
+        case {"status": "success", "data": data}:
+            return f"Success: {data}"
+        case {"status": "error", "message": msg}:
+            return f"Error: {msg}"
+        case _:
+            return "Unknown response"
+```
+
+### Structural Pattern Matching with Classes
+```python
+# Good - pattern matching with classes
+def process_result(result: ProcessingResult) -> str:
+    match result:
+        case ProcessingResult(success=True, data=data):
+            return f"Processed: {data}"
+        case ProcessingResult(success=False, error=error):
+            return f"Failed: {error}"
+```
+
+### Enhanced Error Messages (Python 3.11+)
+```python
+# Good - use exception groups and notes
+def validate_data(data: dict[str, any]) -> None:
+    errors = []
+    
+    if "name" not in data:
+        errors.append(ValueError("Missing 'name' field"))
+    
+    if "age" not in data:
+        errors.append(ValueError("Missing 'age' field"))
+    
+    if errors:
+        raise ExceptionGroup("Validation failed", errors)
+```
+
+### Dataclasses with Slots (Python 3.10+)
+```python
+# Good - use slots for performance
+from dataclasses import dataclass
+
+@dataclass(slots=True)
+class User:
+    id: str
+    name: str
+    age: int
+    active: bool = True
+```
+
+## Import Organization
+
+### Modern Collections
+```python
+# Good - use collections.abc for abstract types
+from collections.abc import Mapping, Sequence, Iterable
+from typing import Protocol, TypeVar, Generic
+
+# Not needed in 3.11 - built-in types are generic
+# from typing import Dict, List, Set, Tuple
+```
+
+### Conditional Imports
+```python
+# Good - use TYPE_CHECKING for import cycles
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from mymodule import SomeClass
+
+def process(item: SomeClass) -> None:
+    # implementation
+    pass
+```
+
+## Performance Optimizations
+
+### Use Slots for Classes
+```python
+# Good - use __slots__ for better memory usage
+class DataProcessor:
+    __slots__ = ('data', 'config', 'results')
+    
+    def __init__(self, data: list[dict], config: dict[str, any]):
+        self.data = data
+        self.config = config
+        self.results: list[any] = []
+```
+
+### F-strings for Formatting
+```python
+# Good - use f-strings (fastest)
+name = "Alice"
+age = 30
+message = f"User {name} is {age} years old"
+
+# Good - for complex formatting
+value = 3.14159
+formatted = f"Pi is approximately {value:.2f}"
+```
+
+## Exception Handling
+
+### Use Exception Groups (Python 3.11+)
+```python
+# Good - group related exceptions
+def process_batch(items: list[dict]) -> list[Result]:
+    results = []
+    errors = []
+    
+    for item in items:
+        try:
+            result = process_item(item)
+            results.append(result)
+        except Exception as e:
+            errors.append(e)
+    
+    if errors:
+        raise ExceptionGroup("Batch processing failed", errors)
+    
+    return results
+```
+
+## Function Signatures
+
+### Use ParamSpec for Decorators (Python 3.10+)
+```python
+from typing import ParamSpec, TypeVar, Callable
+
+P = ParamSpec('P')
+R = TypeVar('R')
+
+def log_calls(func: Callable[P, R]) -> Callable[P, R]:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
+        print(f"Calling {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+```

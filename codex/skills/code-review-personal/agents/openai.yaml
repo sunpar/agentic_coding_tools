@@ -1,0 +1,4 @@
+interface:
+  display_name: "Code Review Personal"
+  short_description: "Review branch changes against plan and standards"
+  default_prompt: "Run a full code review for current branch changes using project conventions and severity-ranked findings."
