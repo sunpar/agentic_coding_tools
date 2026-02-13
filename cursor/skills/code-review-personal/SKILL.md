@@ -9,7 +9,7 @@ disable-model-invocation: true
 ## Workflow
 
 1. Run `git diff main...HEAD` to inspect all branch changes.
-2. Load context from `FEATURE_PLAN.md` or `feature_summary.md` if either exists.
+2. Load context from `FEATURE_PLAN.md`, `feature_summary.md`, any `{git-root}/docs/feature-summary*.md` files, or task-prefixed `T*-feature-summary*.md` files if they exist (prefer the most recent summary).
 3. Load context from `ORIGINAL_PLAN.md` if it exists.
 4. Review all changes against the criteria below.
 

@@ -14,7 +14,7 @@ disable-model-invocation: true
 
 ## Output File
 
-Create `feature_summary.md` with these sections:
+By default, create `{git-root}/feature_summary.md` with these sections. If the calling workflow specifies an explicit output path, use that path but keep the same section structure:
 
 1. Executive Summary (2-4 sentences)
 2. Scope of Changes

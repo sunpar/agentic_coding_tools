@@ -11,10 +11,10 @@ Execute these steps in order:
 1. Determine git repository root.
 2. Run `feature-dev` for the provided feature request.
 3. Run `write-tests` for the implemented feature.
-4. Run `feature-summary` and save to `{git-root}/docs/feature-summary.md`.
-5. Run `lightweight-code-review` and implement high-value low-risk cleanups.
-6. Run `feature-summary` again and save to `{git-root}/docs/feature-summary-2.md`.
-7. Run `code-review-personal` using updated context and save to `{git-root}/docs/code-review-personal.md`.
+4. Run `feature-summary` with output path `{git-root}/docs/feature-summary.md`.
+5. Run `code-review-personal` (it will load context from `docs/feature-summary.md`) and implement high-value low-risk cleanups.
+6. Run `feature-summary` again with output path `{git-root}/docs/feature-summary-2.md`.
+7. Run `code-review-personal` using updated context from `docs/feature-summary*.md` and save review to `{git-root}/docs/code-review-personal.md`.
 
 ## Rules
 
