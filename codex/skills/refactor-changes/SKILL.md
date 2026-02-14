@@ -50,4 +50,4 @@ Use this structure:
 
 - Preserve behavior; call out any non-zero risk.
 - Focus on changed code first, then adjacent cleanup.
-- For extra pattern examples, read `.claude/commands/patterns.md` if present.
+- For extra pattern examples, read `.claude/references/refactor-patterns.md` if present.
