@@ -8,7 +8,7 @@ alwaysApply: false
 
 ## Typing — non-negotiable
 - IMPORTANT: Type-annotate every function signature (parameters AND return type). No exceptions.
-- Use built-in generics: `list[str]`, `dict[str, int]`, `set[str]`. NEVER import `List`, `Dict`, `Tuple`, `Set`, or `Optional` from `typing`.
+- Use built-in generics: `list[str]`, `dict[str, int]`, `set[str]`. Never import their `typing` aliases (`List`, `Dict`, `Tuple`, `Set`, `Optional`).
 - Use `X | None` not `Optional[X]`. Use `X | Y` not `Union[X, Y]`.
 - Use `collections.abc` for abstract types: `Sequence`, `Mapping`, `Iterable`, `Callable`.
 - Use `Protocol` for structural subtyping over ABCs when you only need a few methods.
@@ -29,5 +29,6 @@ alwaysApply: false
 - Context managers (`with`) for all resource management
 - `zip(strict=True)` for parallel iteration (3.10+)
 - `match`/`case` for complex branching on data shapes
+- **Assumes Python 3.10+** (built-in generics, `X | Y` unions, `match`/`case`, `zip(strict=True)`, `slots=True`)
 - Timezone-aware datetimes (`datetime.now(tz=UTC)`)
 - Separate pure logic from I/O — business rules should be testable without mocking filesystem, DB, or network

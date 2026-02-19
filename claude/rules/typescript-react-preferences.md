@@ -31,7 +31,7 @@ alwaysApply: false
 - Extract reusable stateful logic into `use*` custom hooks (one concern per hook).
 
 ## State management — decision tree
-1. **Server data?** -> React Query (TanStack Query v5). Type all queries and mutations. Use query key factories. Set `staleTime` >= 5s. Use optimistic updates for instant-feel mutations.
+1. **Server data?** -> React Query (TanStack Query v5+). Type all queries and mutations. Use query key factories. Set `staleTime` >= 5s. Use optimistic updates for instant-feel mutations.
 2. **Shared UI state (theme, auth, locale)?** -> Context API. One small typed context per concern. Always provide a guard hook that throws if used outside its provider.
 3. **Local to one component?** -> `useState` / `useReducer`.
 4. **Complex client workflow (undo/redo, offline drafts, multi-step forms)?** -> MobX State Tree. Keep models flat and small, type with `Instance<typeof Model>`, wrap consumers in `observer`.
