@@ -1,0 +1,4 @@
+interface:
+  display_name: "TASKS.md Generator"
+  short_description: "Generate structured TASKS.md plans from docs"
+  default_prompt: "Use $tasks-md-generator to create TASKS.md from docs/login or docs/login/PRD.md."
