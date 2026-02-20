@@ -8,3 +8,4 @@ Execute these steps in order. First determine the git repository root, then read
 6. Read {git-root}/docs/refactor.md and decide which refactors offer a good gain in readability, code structure, performance, and brevity and implement them.
 7. Read {git-root}/.claude/commands/feature-summary.md and execute it, saving output to {git-root}/docs/feature-summary-2.md
 8. Read {git-root}/.claude/commands/code-review-personal.md and execute it, linking both {git-root}/docs/feature-summary-2.md and the original file: $ARGUMENTS and saving output to {git-root}/docs/code-review-personal.md
+9. Read {git-root}/.claude/commands/review-feedback-orchestrator.md and execute it using {git-root}/docs/code-review-personal.md from step 8 as the primary source (append PR comments or pasted notes if available), saving output to {git-root}/docs/review-feedback-resolution.md
