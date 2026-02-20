@@ -14,16 +14,20 @@ description: Remove AI-generated code slop from the current branch by auditing `
 
 ## Remove These Patterns
 
-1. Excessive comments: remove comments that are obvious, redundant, or inconsistent with the file.
-2. Over-defensive code: remove abnormal guard clauses/try-catch blocks in trusted code paths.
-3. Type escape hatches: remove `any`/`Any` workarounds when a concrete type is straightforward.
-4. Style inconsistencies: align naming, formatting, and structure to nearby code.
-5. Unnecessary abstractions: inline one-off helpers that add indirection without reuse.
-6. Verbose error handling: remove catch/rethrow or logging-only catches that add no value.
+1. Decorative comment separators: remove divider comments like `# --------`, `// ========`, and other visual filler.
+2. Self-evident/verbose comments: remove comments that merely narrate obvious code behavior.
+3. Redundant docstrings: remove docstrings that only restate the function/class name without useful detail.
+4. Type escape hatches: remove `any`/`Any` workarounds when a concrete type is straightforward (prioritize TypeScript `any`).
+5. Overly verbose variable names: shorten names that are unnecessarily long while keeping clarity.
+6. Over-defensive code: remove abnormal guard clauses/try-catch blocks in trusted code paths.
+7. Style inconsistencies: align naming, formatting, and structure to nearby code.
+8. Unnecessary abstractions: inline one-off helpers that add indirection without reuse.
+9. Verbose error handling: remove catch/rethrow or logging-only catches that add no value.
 
 ## Decision Rules
 
 - Preserve behavior; de-slop is cleanup, not feature redesign.
+- Preserve meaningful documentation (non-obvious rationale, constraints, API contracts, and caveats).
 - Prefer the smallest possible diff that resolves the issue.
 - If a pattern is ambiguous, leave it and note it rather than over-editing.
 - Respect existing project conventions and lint/type constraints.

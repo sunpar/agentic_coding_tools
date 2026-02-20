@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Feedback Orchestrator"
+  short_description: "Validate review comments, plan fixes, and delegate implementation"
+  default_prompt: "Analyze all review feedback, validate each item against the code, create a prioritized fix plan, and dispatch clear implementation tasks to subagents."
