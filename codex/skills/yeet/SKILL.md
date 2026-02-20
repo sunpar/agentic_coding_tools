@@ -18,11 +18,16 @@ description: "Use only when the user explicitly asks to stage, commit, push, and
 
 - If on main/master/default, create a branch: `git checkout -b "codex/{description}"`
 - Otherwise stay on the current branch.
-- Confirm status, then stage everything: `git status -sb` then `git add -A`.
+- Confirm status and staged state: `git status -sb` and `git diff --cached --name-only`.
+- If files are already staged, do **not** stage additional files.
+- If nothing is staged, stage only files that logically belong together (never `git add -A`).
 - Commit tersely with the description: `git commit -m "{description}"`
 - Run checks if not already. If checks fail due to missing deps/tools, install dependencies and rerun once.
+- If commit/hooks fail, fix issues and re-stage only files touched by those fixes (avoid broad re-staging).
 - Push with tracking: `git push -u origin $(git branch --show-current)`
 - If git push fails due to workflow auth errors, pull from master and retry the push.
 - Open a PR and edit title/body to reflect the description and the deltas: `GH_PROMPT_DISABLED=1 GIT_TERMINAL_PROMPT=0 gh pr create --draft --fill --head $(git branch --show-current)`
 - Write the PR description to a temp file with real newlines (e.g. pr-body.md ... EOF) and run pr-body.md to avoid \\n-escaped markdown.
+- After PR creation (or if one already exists), post a PR comment tagging `@codex` and `@copilot` to request reviews.
+- Then run a follow-up loop: `sleep 300` and run `/pr-comments`, up to 5 iterations or until the user cancels.
 - PR description (markdown) must be detailed prose covering the issue, the cause and effect on users, the root cause, the fix, and any tests or checks used to validate.

@@ -44,7 +44,10 @@ A required commit message, provided by the user.
      - `gh pr create --base main --head <current-branch> --fill`
      - If `--fill` is insufficient, prompt for title/body and create with explicit values.
 
-8. PR follow-up loop:
+8. Request reviewer attention comment:
+   - If a PR was created or found, post a PR comment tagging both `@codex` and `@copilot` to request reviews.
+
+9. PR follow-up loop:
    - After the PR exists/has been created, wait 5 minutes (`sleep 300`).
    - Then run `/pr-comments`.
    - Repeat this wait + `/pr-comments` cycle for up to 5 total iterations.
@@ -53,12 +56,14 @@ A required commit message, provided by the user.
 ## Output
 
 Return:
+
 - Branch name
 - Whether a commit was created
 - If a commit was created:
   - Commit SHA and message
   - Push result
   - PR status (existing or newly created) and URL
+  - Whether the `@codex` + `@copilot` tag comment was posted
   - PR follow-up loop status (how many iterations ran and whether stopped early)
 - If no commit was created (e.g., no changes to commit):
   - A message indicating that there were no changes to commit and nothing was pushed

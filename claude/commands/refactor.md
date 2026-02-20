@@ -142,6 +142,6 @@ Structure your response as:
 
 **Important**: For detailed refactoring patterns with before/after examples, read the extended reference file:
 ```
-.claude/references/refactor-patterns.md
+claude/references/refactor-patterns.md
 ```
 Use the Read tool to load this file when you need specific pattern examples during the refactoring analysis.
