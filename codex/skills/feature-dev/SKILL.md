@@ -1,6 +1,6 @@
 ---
 name: feature-dev
-description: Run a phased feature-development workflow: discovery, codebase exploration, clarifying questions, architecture options, implementation, quality review, and summary. Use when a user asks for end-to-end feature delivery with strong design rigor before coding.
+description: "Run a phased feature-development workflow: discovery, codebase exploration, clarifying questions, architecture options, implementation, quality review, and summary. Use when a user asks for end-to-end feature delivery with strong design rigor before coding."
 ---
 
 # Feature Development
