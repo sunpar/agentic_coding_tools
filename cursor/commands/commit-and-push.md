@@ -31,7 +31,7 @@ Create a commit from current changes, push the branch, and ensure a pull request
    - Post a PR comment tagging `@codex` and `@copilot`.
 
 8. Follow-up loop:
-   - Sleep 5 minutes (`sleep 300`) then run `/pr-comments`.
+   - Sleep 5 minutes (`sleep 300`), then use `gh api` to fetch the latest PR review comments and address any new feedback.
    - Repeat up to 5 iterations, or stop early if canceled/stopped by the user.
 
 ## Output

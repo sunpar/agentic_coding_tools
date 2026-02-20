@@ -10,7 +10,9 @@ from pathlib import Path
 
 TASK_HEADING_RE = re.compile(r"^### T(\d+):", re.MULTILINE)
 TIER_HEADING_RE = re.compile(r"^## TIER\s+(\d+)\s+-\s+", re.MULTILINE)
-COUNT_LINE_RE = re.compile(r"^(\d+)\s+tasks\s+organized\s+into\s+(\d+)\s+tiers", re.MULTILINE)
+COUNT_LINE_RE = re.compile(
+    r"^(\d+)\s+tasks\s+organized\s+into\s+(\d+)\s+tiers", re.MULTILINE
+)
 TITLE_RE = re.compile(r"^#\s+.+\s+-\s+Implementation Tasks\s*$", re.MULTILINE)
 FIELD_RE_TEMPLATE = r"^\|\s*{field}\s*\|\s*(.*?)\s*\|\s*$"
 TASK_REF_RE = re.compile(r"T(\d+)")
@@ -70,7 +72,9 @@ def validate(text: str, *, strict: bool = False) -> tuple[list[str], list[str]]:
     warnings: list[str] = []
 
     if not TITLE_RE.search(text):
-        errors.append("Missing or invalid title. Expected '# <Feature> - Implementation Tasks'.")
+        errors.append(
+            "Missing or invalid title. Expected '# <Feature> - Implementation Tasks'."
+        )
 
     if "## Dependency Graph" not in text:
         errors.append("Missing required section: '## Dependency Graph'.")
@@ -99,7 +103,9 @@ def validate(text: str, *, strict: bool = False) -> tuple[list[str], list[str]]:
             warnings=warnings,
         )
 
-    contiguous_expected = list(range(1, (max(unique_numbers) if unique_numbers else 0) + 1))
+    contiguous_expected = list(
+        range(1, (max(unique_numbers) if unique_numbers else 0) + 1)
+    )
     if unique_numbers != contiguous_expected:
         _record_violation(
             strict=strict,
@@ -149,18 +155,26 @@ def validate(text: str, *, strict: bool = False) -> tuple[list[str], list[str]]:
 
     defined_tasks = set(unique_numbers)
     for task in task_ranges:
-        snippet = text[task.start:task.end]
+        snippet = text[task.start : task.end]
         blocked_by = _extract_field(snippet, "Blocked by")
         blocks = _extract_field(snippet, "Blocks")
+        files = _extract_field(snippet, "Files")
+        reference = _extract_field(snippet, "Reference")
 
         if blocked_by is None:
             errors.append(f"T{task.number}: missing 'Blocked by' field.")
         if blocks is None:
             errors.append(f"T{task.number}: missing 'Blocks' field.")
+        if files is None:
+            errors.append(f"T{task.number}: missing 'Files' field.")
+        if reference is None:
+            errors.append(f"T{task.number}: missing 'Reference' field.")
 
         for ref in _extract_task_refs(blocked_by):
             if ref not in defined_tasks:
-                errors.append(f"T{task.number}: Blocked by references unknown task T{ref}.")
+                errors.append(
+                    f"T{task.number}: Blocked by references unknown task T{ref}."
+                )
             if ref >= task.number:
                 errors.append(
                     f"T{task.number}: Blocked by must reference earlier tasks only (found T{ref})."

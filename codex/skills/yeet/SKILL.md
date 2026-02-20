@@ -29,5 +29,5 @@ description: "Use only when the user explicitly asks to stage, commit, push, and
 - Open a PR and edit title/body to reflect the description and the deltas: `GH_PROMPT_DISABLED=1 GIT_TERMINAL_PROMPT=0 gh pr create --draft --fill --head $(git branch --show-current)`
 - Write the PR description to a temp file with real newlines (e.g. pr-body.md ... EOF) and run pr-body.md to avoid \\n-escaped markdown.
 - After PR creation (or if one already exists), post a PR comment tagging `@codex` and `@copilot` to request reviews.
-- Then run a follow-up loop: `sleep 300` and run `/pr-comments`, up to 5 iterations or until the user cancels.
+- Then run a follow-up loop (up to 5 iterations, or until the user cancels): `sleep 300`, then use `gh api` to fetch the latest PR review comments and address any new feedback.
 - PR description (markdown) must be detailed prose covering the issue, the cause and effect on users, the root cause, the fix, and any tests or checks used to validate.
