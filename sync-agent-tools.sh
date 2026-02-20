@@ -95,11 +95,18 @@ for project_dir in "$HOME"/*/; do
 
     synced=false
 
-    # .claude — agents, commands, rules, references (mirror); plugins (additive)
-    # hooks/settings are project-specific and never touched
+    # .claude — agents, commands (mirror, only if subdir exists);
+    # rules, references (mirror, always created); plugins (additive).
+    # Hooks/settings are project-specific and never touched.
     if [[ -d "$project_dir.claude" ]]; then
-        for subdir in agents commands rules references; do
+        for subdir in agents commands; do
             if [[ -d "$project_dir.claude/$subdir" && -d "$REPO/claude/$subdir" ]]; then
+                sync_dir "$REPO/claude/$subdir" "$project_dir.claude/$subdir" delete
+                synced=true
+            fi
+        done
+        for subdir in rules references; do
+            if [[ -d "$REPO/claude/$subdir" ]]; then
                 sync_dir "$REPO/claude/$subdir" "$project_dir.claude/$subdir" delete
                 synced=true
             fi
