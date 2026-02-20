@@ -5,7 +5,7 @@ argument-hint: Path to TASKS.md file (e.g., docs/login/TASKS.md)
 
 # Agent Team Workflow
 
-Launch a team of parallel agents from a structured task file. Each agent independently executes the full feature workflow for its assigned task.
+Launch a team of parallel agents from a structured task file. Each agent independently executes the full feature workflow for its assigned task: implement the feature, write tests, then review and refine.
 
 ## Input
 
@@ -47,7 +47,7 @@ Launch **one background agent per task**, all in parallel (use `run_in_backgroun
 **Agent prompt template** (for task T{N}):
 
 ```
-You are performing a quality review workflow for task T{N} of a feature implementation.
+You are implementing and reviewing task T{N} of a feature.
 
 ## Your Task
 
@@ -61,9 +61,42 @@ You are performing a quality review workflow for task T{N} of a feature implemen
 
 ## Instructions
 
-Execute steps 4-8 of the full feature workflow. You are NOT implementing the feature (it's already implemented). You are reviewing and refining existing code.
+Execute the full feature workflow for this task: implement the feature, write tests, then review and refine.
 
 Find the git root directory first.
+
+### Step 1: Codebase Exploration
+
+Before writing any code, understand the relevant codebase:
+
+1. Read all files listed in "Files to Focus On" above.
+2. Identify existing patterns, conventions, abstractions, and imports used in those files and their neighbors.
+3. If the task mentions interacting with other modules (APIs, shared utilities, types), read those files too so you understand the contracts.
+
+### Step 2: Implement the Feature
+
+Using the task description and your codebase understanding, implement the feature:
+
+1. Follow existing codebase patterns and conventions strictly.
+2. Write clean, well-structured code — small focused functions, clear naming, explicit types.
+3. IMPORTANT: Only create or modify files that belong to task T{N}. Do NOT modify files from other tasks.
+
+After implementing, run the relevant tests to make sure nothing is broken:
+- For backend Python files: `cd {git-root}/backend && source .venv/bin/activate && pytest -q`
+- For frontend TypeScript files: `cd {git-root}/frontend && npm test -- --run`
+
+If tests fail, fix the issue before proceeding.
+
+### Step 3: Write Tests
+
+Read {git-root}/.claude/commands/write-tests.md for the test-writing methodology.
+
+Write tests for the code you just implemented:
+
+1. Perform the pre-writing analysis (core logic, inputs/outputs, invariants, failure modes).
+2. Write tests that cover: happy path, edge cases, error conditions, boundary values.
+3. Test behavior, not implementation. Minimize mocking.
+4. Run the tests and ensure they pass.
 
 ### Step 4: Feature Summary
 
@@ -120,7 +153,7 @@ Save the output to: {docs-dir}/T{N}-code-review-personal.md
 ### Step 4: Monitor and report
 
 1. Wait for all agents to complete.
-2. Report a summary table showing each task, its agent status, and what refactorings were applied.
+2. Report a summary table showing each task, its agent status, what was implemented, and what refactorings were applied.
 3. If any agents failed, report the failures and suggest next steps.
 
 ## Notes
@@ -129,3 +162,4 @@ Save the output to: {docs-dir}/T{N}-code-review-personal.md
 - The task file format matches the pattern used in `docs/login/TASKS.md` — tasks prefixed with `T{N}:`, organized in tiers, with file lists and descriptions.
 - If a task has no files listed (e.g., a verification-only task like T17), still launch an agent but instruct it to focus on the verification aspects described in the task body.
 - The docs directory is automatically derived from the task file location.
+- Each agent implements its task autonomously based on the TASKS.md description — no interactive clarification. Ensure the task file contains sufficient detail for unambiguous implementation.
