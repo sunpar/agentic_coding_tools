@@ -9,9 +9,9 @@ disable-model-invocation: true
 ## Quick Start
 
 1. Accept one user-provided path (file or directory).
-2. Run `python3 scripts/discover_targets.py <path>` to map input to output target files.
+2. Run `python3 .cursor/scripts/discover_targets.py <path>` to map input to output target files.
 3. Read each target's source docs and write `TASKS.md` in the same directory.
-4. Run `python3 scripts/validate_tasks_md.py <target>/TASKS.md` before finalizing.
+4. Run `python3 .cursor/scripts/validate_tasks_md.py <target>/TASKS.md` before finalizing.
 
 ## Input Modes
 
@@ -55,7 +55,7 @@ Use when the input path is a parent docs folder containing multiple feature dire
 
 ## Output Contract
 
-Follow `references/tasks_format.md` exactly.
+Follow `.cursor/references/tasks_format.md` exactly.
 
 Required top-level sections in this order:
 
@@ -88,13 +88,13 @@ Required per-task structure:
 Run structural checks:
 
 ```bash
-python3 scripts/validate_tasks_md.py <path-to-TASKS.md>
+python3 .cursor/scripts/validate_tasks_md.py <path-to-TASKS.md>
 ```
 
 If validation fails, fix ordering, task numbering, missing sections, or bad references.
 
 ## References
 
-- `references/tasks_format.md`: canonical TASKS.md skeleton and constraints.
-- `scripts/discover_targets.py`: target discovery for file, feature-dir, and batch-dir modes.
-- `scripts/validate_tasks_md.py`: structural validator for generated TASKS.md output.
+- `.cursor/references/tasks_format.md`: canonical TASKS.md skeleton and constraints.
+- `.cursor/scripts/discover_targets.py`: target discovery for file, feature-dir, and batch-dir modes.
+- `.cursor/scripts/validate_tasks_md.py`: structural validator for generated TASKS.md output.

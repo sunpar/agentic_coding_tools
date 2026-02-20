@@ -59,6 +59,13 @@ git -C "$REPO" checkout main --quiet
 git -C "$REPO" pull origin main --quiet
 ok "Repo updated"
 
+# ── Shared scripts → every editor config dir ─────────────────────────
+# scripts/ lives at repo root and is distributed to all editors (mirror).
+log "Syncing shared scripts..."
+for editor_dir in .claude .codex .cursor; do
+    sync_dir "$REPO/scripts" "$HOME/$editor_dir/scripts" delete
+done
+
 # ── User-level: ~/.claude ────────────────────────────────────────────
 # agents, commands, rules, references → mirror (delete mode)
 # plugins → additive (preserve local installs, blocklist, cache)
@@ -69,14 +76,16 @@ done
 sync_dir "$REPO/claude/plugins" "$HOME/.claude/plugins" keep
 
 # ── User-level: ~/.codex ─────────────────────────────────────────────
-# rules → mirror; skills → additive (preserve .system/ and auto-generated dirs)
+# rules, references → mirror; skills → additive (preserve .system/ and auto-generated dirs)
 log "Syncing user-level Codex configs..."
-sync_dir "$REPO/codex/rules"  "$HOME/.codex/rules"  delete
+for subdir in rules references; do
+    sync_dir "$REPO/codex/$subdir" "$HOME/.codex/$subdir" delete
+done
 sync_dir "$REPO/codex/skills" "$HOME/.codex/skills" keep
 
 # ── User-level: ~/.cursor ────────────────────────────────────────────
 log "Syncing user-level Cursor configs..."
-for subdir in agents commands rules; do
+for subdir in agents commands rules references; do
     sync_dir "$REPO/cursor/$subdir" "$HOME/.cursor/$subdir" delete
 done
 sync_dir "$REPO/cursor/skills" "$HOME/.cursor/skills" keep
@@ -95,8 +104,16 @@ for project_dir in "$HOME"/*/; do
 
     synced=false
 
+    # Shared scripts → every editor config dir (mirror, always created)
+    for editor_dir in .claude .codex .cursor; do
+        if [[ -d "$project_dir$editor_dir" && -d "$REPO/scripts" ]]; then
+            sync_dir "$REPO/scripts" "$project_dir$editor_dir/scripts" delete
+            synced=true
+        fi
+    done
+
     # .claude — agents, commands (mirror, only if subdir exists);
-    # rules, references (mirror, always created); plugins (additive).
+    # rules, references, scripts (mirror, always created); plugins (additive).
     # Hooks/settings are project-specific and never touched.
     if [[ -d "$project_dir.claude" ]]; then
         for subdir in agents commands; do
@@ -117,9 +134,9 @@ for project_dir in "$HOME"/*/; do
         fi
     fi
 
-    # .cursor — agents, commands, rules (mirror); skills (additive)
+    # .cursor — agents, commands, rules, references (mirror); skills (additive)
     if [[ -d "$project_dir.cursor" ]]; then
-        for subdir in agents commands rules; do
+        for subdir in agents commands rules references; do
             if [[ -d "$project_dir.cursor/$subdir" && -d "$REPO/cursor/$subdir" ]]; then
                 sync_dir "$REPO/cursor/$subdir" "$project_dir.cursor/$subdir" delete
                 synced=true
@@ -131,14 +148,18 @@ for project_dir in "$HOME"/*/; do
         fi
     fi
 
-    # .codex — rules & skills (additive)
+    # .codex — rules, references (mirror); skills (additive)
     if [[ -d "$project_dir.codex" ]]; then
-        for subdir in rules skills; do
-            if [[ -d "$project_dir.codex/$subdir" && -d "$REPO/codex/$subdir" ]]; then
-                sync_dir "$REPO/codex/$subdir" "$project_dir.codex/$subdir" keep
+        for subdir in rules references; do
+            if [[ -d "$REPO/codex/$subdir" ]]; then
+                sync_dir "$REPO/codex/$subdir" "$project_dir.codex/$subdir" delete
                 synced=true
             fi
         done
+        if [[ -d "$project_dir.codex/skills" && -d "$REPO/codex/skills" ]]; then
+            sync_dir "$REPO/codex/skills" "$project_dir.codex/skills" keep
+            synced=true
+        fi
     fi
 
     $synced && log "  → $project_name"

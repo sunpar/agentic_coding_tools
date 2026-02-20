@@ -5,9 +5,9 @@ Generate implementation-ready `TASKS.md` files from planning documents.
 ## Quick Start
 
 1. Accept one input path from the user (file or directory).
-2. Run `python3 scripts/discover_targets.py <path>` to resolve the feature directories to process.
+2. Run `python3 .claude/scripts/discover_targets.py <path>` to resolve the feature directories to process.
 3. For each target, read the source planning docs and create/update `TASKS.md` in that directory.
-4. Validate each output with `python3 scripts/validate_tasks_md.py <target>/TASKS.md`.
+4. Validate each output with `python3 .claude/scripts/validate_tasks_md.py <target>/TASKS.md`.
 
 ## Input Modes
 
@@ -51,7 +51,7 @@ Use when the path is a parent docs folder with multiple feature directories.
 
 ## Required Output Contract
 
-Follow `references/tasks_format.md`.
+Follow `.claude/references/tasks_format.md`.
 
 Every generated `TASKS.md` must include, in order:
 
@@ -84,7 +84,7 @@ Each task must include:
 Run after writing each file:
 
 ```bash
-python3 scripts/validate_tasks_md.py <path-to-TASKS.md>
+python3 .claude/scripts/validate_tasks_md.py <path-to-TASKS.md>
 ```
 
 If validation fails, fix ordering, numbering, missing sections, or malformed references.
