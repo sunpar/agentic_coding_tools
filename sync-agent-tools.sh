@@ -55,7 +55,7 @@ sync_dir() {
 
 # ── Pull latest from central repo ────────────────────────────────────
 log "Pulling latest main..."
-git -C "$REPO" checkout main --quiet 2>/dev/null
+git -C "$REPO" checkout main --quiet
 git -C "$REPO" pull origin main --quiet
 ok "Repo updated"
 
