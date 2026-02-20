@@ -14,6 +14,7 @@ This file defines the shared, canonical capability names that should remain alig
 - `code-review-personal`
 - `review-commits`
 - `review-feedback-orchestrator`
+- `plan-to-doc-bundle`
 
 ## Platform mapping
 
@@ -29,6 +30,7 @@ This file defines the shared, canonical capability names that should remain alig
 | `code-review-personal` | `cursor/skills/code-review-personal/SKILL.md` | `claude/commands/code-review-personal.md` | `codex/skills/code-review-personal/SKILL.md` |
 | `review-commits` | `cursor/skills/review-commits/SKILL.md` | `claude/commands/review-commits.md` | `codex/skills/review-commits/SKILL.md` |
 | `review-feedback-orchestrator` | `cursor/skills/review-feedback-orchestrator/SKILL.md` | `claude/commands/review-feedback-orchestrator.md` | `codex/skills/review-feedback-orchestrator/SKILL.md` |
+| `plan-to-doc-bundle` | `cursor/skills/plan-to-doc-bundle/SKILL.md` | `claude/commands/plan-to-doc-bundle.md` | `codex/skills/plan-to-doc-bundle/SKILL.md` |
 
 ## Notes
 
