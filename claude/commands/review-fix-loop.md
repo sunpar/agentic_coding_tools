@@ -103,9 +103,9 @@ Read the agent definition at {git-root}/.claude/agents/review-fixer.md and follo
 After the subagent completes:
 
 1. Read document C (`{A-dir}/fix-report.md`) to confirm it was written.
-2. Increment `iteration`.
-3. If `iteration > MAX_ITERATIONS`: go to **Step 3: Final Report**.
-4. Otherwise: go back to **Step 1: Review** (the next review will use both A and C as input).
+2. If `iteration >= MAX_ITERATIONS`: go to **Step 3: Final Report**.
+3. Increment `iteration`.
+4. Go back to **Step 1: Review** (the next review will use both A and C as input).
 
 ### Step 3: Final Report
 
@@ -169,7 +169,7 @@ After the loop ends (either by a CLEAN verdict or hitting MAX_ITERATIONS), prese
               │     └──────┬───────┘
               │            │
               │     ┌──────▼──────┐     ┌──────────────┐
-              └─NO──┤ iteration>4?├─YES►│  Final Report │
+              └─NO──┤iteration>=4?├─YES►│  Final Report │
                     └─────────────┘     └──────────────┘
 ```
 
