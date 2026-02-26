@@ -58,7 +58,7 @@ Read the agent definition at {git-root}/.claude/agents/doc-code-reviewer.md and 
 3. Follow the review process defined in the agent definition.
 4. Write your review report to the output file path above.
 5. IMPORTANT: At the very end of your response, state the verdict on its own line in this exact format:
-   VERDICT: {CLEAN|MINOR_ISSUES|NEEDS_FIXES}
+   **Verdict**: {CLEAN|MINOR_ISSUES|NEEDS_FIXES}
 ```
 
 ---
