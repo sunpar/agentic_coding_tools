@@ -1,0 +1,3 @@
+[agents."gh-commit-pr-review-worker"]
+description = "Commit staged work, push the branch, and open a PR asking @codex and @copilot for review"
+config_file = "agents/gh-commit-pr-review-worker.toml"

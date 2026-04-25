@@ -76,9 +76,9 @@ done
 sync_dir "$REPO/claude/plugins" "$HOME/.claude/plugins" keep
 
 # ── User-level: ~/.codex ─────────────────────────────────────────────
-# rules, references → mirror; skills → additive (preserve .system/ and auto-generated dirs)
+# agents, rules, references → mirror; skills → additive (preserve .system/ and auto-generated dirs)
 log "Syncing user-level Codex configs..."
-for subdir in rules references; do
+for subdir in agents rules references; do
     sync_dir "$REPO/codex/$subdir" "$HOME/.codex/$subdir" delete
 done
 sync_dir "$REPO/codex/skills" "$HOME/.codex/skills" keep
@@ -148,9 +148,9 @@ for project_dir in "$HOME"/*/; do
         fi
     fi
 
-    # .codex — rules, references (mirror); skills (additive)
+    # .codex — agents, rules, references (mirror); skills (additive)
     if [[ -d "$project_dir.codex" ]]; then
-        for subdir in rules references; do
+        for subdir in agents rules references; do
             if [[ -d "$REPO/codex/$subdir" ]]; then
                 sync_dir "$REPO/codex/$subdir" "$project_dir.codex/$subdir" delete
                 synced=true

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit PR Review"
+  short_description: "Commit, push, and open a review PR"
+  default_prompt: "Use $gh-commit-pr-review to commit staged work, push the branch, and open a PR asking @codex and @copilot for review."
